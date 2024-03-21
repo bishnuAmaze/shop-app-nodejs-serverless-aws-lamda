@@ -5,7 +5,7 @@ import { Products, ProductById } from '@functions/product';
 const serverlessConfiguration: AWS = {
   service: 'productservice',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-auto-swagger', 'serverless-webpack', 'serverless-esbuild'],
   provider: {
     name: 'aws',
     runtime: 'nodejs20.x',
@@ -17,7 +17,7 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
     },
   },
   // import the function via paths

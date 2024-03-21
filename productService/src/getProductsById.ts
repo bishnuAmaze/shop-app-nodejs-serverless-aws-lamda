@@ -16,6 +16,12 @@ export const getProductsByIdHandler = () => async (event: APIGatewayProxyEvent) 
         }
 
         const product: IProduct | undefined = await Promise.resolve(Products.find(product => product.id === productId));
+        if (!product) {
+            return formatJSONResponse({
+                status: 404,
+                body: JSON.stringify({ message: "Product not found" }),
+            });
+        }
         return formatJSONResponse({
             status: 200,
             body: product
