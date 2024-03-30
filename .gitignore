@@ -5,6 +5,7 @@ node_modules
 */.dynamodb
 */.env.local
 **/dist
+*/**/*.js
 
 # Serverless directories
 */.serverless
