@@ -8,26 +8,10 @@ export const Products = {
       http: {
         method: 'get',
         path: 'products',
-        cors: {
-          origin: '*',
-          headers: [
-            'Content-Type',
-            'X-Amz-Date',
-            'Authorization',
-            'X-Api-Key',
-            'X-Amz-Security-Token',
-            'X-Amz-User-Agent',
-          ],
-          allowCredentials: true,
-        },
-        // request: {
-        //   schemas: {
-        //     'application/json': schema,
-        //   },
-        // },
-      },
-    },
-  ],
+        cors: true
+      }
+    }
+  ]
 };
 
 export const ProductById = {
@@ -48,4 +32,17 @@ export const ProductById = {
       },
     },
   ],
+};
+
+export const CreateProduct = {
+  handler: `${handlerPath(__dirname)}/handler.createProduct`,
+  events: [
+    {
+      http: {
+        method: 'post',
+        path: 'products',
+        cors: true
+      }
+    }
+  ]
 };

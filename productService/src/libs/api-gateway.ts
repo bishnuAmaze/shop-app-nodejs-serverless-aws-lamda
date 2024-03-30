@@ -10,15 +10,18 @@ const defaultHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
   // "Access-Control-Allow-Headers": "*",
-  // "Content-Type": "application/json",
+  "Content-Type": "application/json",
 };
 
 export const formatJSONResponse = (response: Record<string, unknown>) => {
+  const statusCode = response && typeof response.status === 'number' ? response.status : 200;
+  const body = response && typeof response.body === 'object' ? response.body : {};
   return {
-    statusCode: response.status,
+    statusCode: statusCode,
     headers: {
       ...defaultHeaders
     },
-    body: JSON.stringify(response.body)
+    body: JSON.stringify(body),
+    isBase64Encoded: false
   }
 }
