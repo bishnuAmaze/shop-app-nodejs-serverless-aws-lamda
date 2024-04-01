@@ -11,6 +11,7 @@ const defaultHeaders = {
   "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
   // "Access-Control-Allow-Headers": "*",
   "Content-Type": "application/json",
+  'Access-Control-Allow-Credentials': true,
 };
 
 export const formatJSONResponse = (response: Record<string, unknown>) => {

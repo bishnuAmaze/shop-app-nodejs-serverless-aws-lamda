@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 test('successfully creates a product', async () => {
-  AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
+  AWSMock.mock('DynamoDB.DocumentClient', 'put', (_: any, callback: Function) => {
     callback(null, "successfully put item");
   });
 
@@ -46,7 +46,7 @@ test('returns an error when a required field is missing', async () => {
 });
 
 test('returns an error when DynamoDB operation fails', async () => {
-  AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
+  AWSMock.mock('DynamoDB.DocumentClient', 'put', (_: any, callback: Function) => {
     callback(new Error('DynamoDB error'), null);
   });
 

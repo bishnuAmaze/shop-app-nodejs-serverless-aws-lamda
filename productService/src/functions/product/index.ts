@@ -41,7 +41,16 @@ export const CreateProduct = {
       http: {
         method: 'post',
         path: 'products',
-        cors: true
+        cors: true,
+        // reqValidatorName: '${self:custom.reqValidatorName}',
+        // documentation: {
+        //   summary: "Create a product",
+        //   description: "Create a product",
+        //   requestBody: {
+        //     description: "Create product body data",
+        //   },
+        //   requestModel: 'Product'
+        // }
       }
     }
   ]

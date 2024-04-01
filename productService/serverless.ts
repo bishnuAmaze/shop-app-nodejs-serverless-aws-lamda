@@ -5,7 +5,8 @@ import { Products, ProductById, CreateProduct } from '@functions/product';
 const serverlessConfiguration: AWS = {
   service: 'productservice',
   frameworkVersion: '3',
-  plugins: ['serverless-auto-swagger', 'serverless-webpack', 'serverless-esbuild', 'serverless-dynamodb-local', 'serverless-offline'],
+  plugins: ['serverless-auto-swagger', 'serverless-webpack', 'serverless-esbuild', 'serverless-dynamodb-local', 'serverless-offline', 'serverless-aws-documentation',
+    'serverless-reqvalidator-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs20.x',
@@ -77,13 +78,52 @@ const serverlessConfiguration: AWS = {
             WriteCapacityUnits: 1
           }
         }
-      }
+      },
+      ApiGatewayRestApi: {
+        Type: 'AWS::ApiGateway::RestApi',
+        Properties: {
+          Name: '${self:provider.stage}-${self:service}', // replace with your service name and stage
+        },
+      },
+      RequestValidatorFull: {
+        Type: 'AWS::ApiGateway::RequestValidator',
+        Properties: {
+          RestApiId: { Ref: 'ApiGatewayRestApi' },
+          Name: '${self:custom.reqValidatorName}',
+          ValidateRequestBody: true,
+          ValidateRequestParameters: true,
+        },
+        DependsOn: ['ApiGatewayRestApi'],
+      },
     }
   },
   // import the function via paths
   functions: { Products, ProductById, CreateProduct },
   package: { individually: true },
   custom: {
+    reqValidatorName: 'RequestValidatorFull',
+    plugins: {
+      'serverless-aws-documentation': {
+        models: {
+          // Define your payload model here
+          'Product': {
+            name: 'Product',
+            description: 'Product data model',
+            contentType: 'application/json',
+            schema: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                description: { type: 'string' },
+                price: { type: 'number' },
+                count: { type: 'number' },
+              },
+              required: ['title', 'description', 'price', 'count']
+            },
+          }
+        },
+      },
+    },
     dynamodb: {
       stages: 'dev',
       start: {
