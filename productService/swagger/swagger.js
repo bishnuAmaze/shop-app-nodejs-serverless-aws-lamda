@@ -6,11 +6,11 @@
     "version": "1"
   },
   "paths": {
-    "/products": {
+    "/dev/products": {
       "get": {
         "summary": "Products",
         "description": "",
-        "operationId": "Products.get.products",
+        "operationId": "Products.get./dev/products",
         "consumes": [
           "application/json"
         ],
@@ -27,7 +27,7 @@
       "post": {
         "summary": "CreateProduct",
         "description": "",
-        "operationId": "CreateProduct.post.products",
+        "operationId": "CreateProduct.post./dev/products",
         "consumes": [
           "application/json"
         ],
@@ -42,11 +42,11 @@
         }
       }
     },
-    "/products/{productId}": {
+    "/dev/products/{productId}": {
       "get": {
         "summary": "ProductById",
         "description": "",
-        "operationId": "ProductById.get.products/{productId}",
+        "operationId": "ProductById.get./dev/products/{productId}",
         "consumes": [
           "application/json"
         ],

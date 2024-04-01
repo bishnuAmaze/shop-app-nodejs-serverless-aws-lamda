@@ -5,10 +5,9 @@ export const Products = {
   handler: `${handlerPath(__dirname)}/handler.getProductsList`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'products',
-        cors: true
+      httpApi: {
+        method: 'GET',
+        path: '/${self:provider.stage}/products',
       }
     }
   ]
@@ -18,17 +17,9 @@ export const ProductById = {
   handler: `${handlerPath(__dirname)}/handler.getProductsById`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'products/{productId}',
-        cors: true,
-        request: {
-          parameters: {
-            paths: {
-              productId: true
-            }
-          }
-        },
+      httpApi: {
+        method: 'GET',
+        path: '/${self:provider.stage}/products/{productId}',
       },
     },
   ],
@@ -38,19 +29,9 @@ export const CreateProduct = {
   handler: `${handlerPath(__dirname)}/handler.createProduct`,
   events: [
     {
-      http: {
-        method: 'post',
-        path: 'products',
-        cors: true,
-        // reqValidatorName: '${self:custom.reqValidatorName}',
-        // documentation: {
-        //   summary: "Create a product",
-        //   description: "Create a product",
-        //   requestBody: {
-        //     description: "Create product body data",
-        //   },
-        //   requestModel: 'Product'
-        // }
+      httpApi: {
+        method: 'POST',
+        path: '/${self:provider.stage}/products',
       }
     }
   ]
