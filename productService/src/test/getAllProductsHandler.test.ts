@@ -18,7 +18,7 @@ describe('Testing getAllProductsHandler', () => {
       body: Products
     });
 
-    const response = await getAllProductsHandler()();
+    const response = await getAllProductsHandler();
     expect(response).toEqual(expected);
 
   });
