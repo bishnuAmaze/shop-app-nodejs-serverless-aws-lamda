@@ -1,1 +1,1 @@
-export {  Products, ProductById } from './product';
+export {  Products, ProductById, CreateProduct } from './product';
