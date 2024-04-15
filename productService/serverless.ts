@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 
-import { Products, ProductById, CreateProduct } from '@functions/product';
+import { Products, ProductById, CreateProduct, CatalogBatchProcess } from '@functions/product';
 
 const serverlessConfiguration: AWS = {
   service: 'productservice',
@@ -35,12 +35,38 @@ const serverlessConfiguration: AWS = {
           'dynamodb:GetItem',
           'dynamodb:PutItem',
           'dynamodb:UpdateItem',
-          'dynamodb:DeleteItem'
+          'dynamodb:DeleteItem',
+          'dynamodb:BatchWriteItem',
         ],
         Resource: [
           { 'Fn::GetAtt': ['ProductsTable', 'Arn'] },
           { 'Fn::GetAtt': ['StocksTable', 'Arn'] }
         ]
+      },
+      {
+        Effect: 'Allow',
+        Action: [
+          'sqs:SendMessage',
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueAttributes'
+        ],
+        Resource: { 'Fn::GetAtt': ['CatalogBatchProcessQueue', 'Arn'] },
+      },
+      {
+        Effect: 'Allow',
+        Action: [
+          'sqs:SendMessage',
+          'sqs:ReceiveMessage',
+          'sqs:DeleteMessage',
+          'sqs:GetQueueUrl'
+        ],
+        Resource: [{ 'Fn::GetAtt': ['CatalogItemsQueue', 'Arn'] }] // Resources can be an array
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sns:Publish',
+        Resource: "*",
       }
     ],
   },
@@ -98,10 +124,38 @@ const serverlessConfiguration: AWS = {
         },
         DependsOn: ['ApiGatewayRestApi'],
       },
+      CatalogBatchProcessQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogBatchProcessQueue',
+        },
+      },
+      CatalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogItemsQueue',
+        }
+      },
+      CreateProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'createProductTopic'
+        }
+      },
+      EmailSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'bishnulpbhakat@gmail.com',
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'CreateProductTopic'
+          }
+        }
+      }
     }
   },
   // import the function via paths
-  functions: { Products, ProductById, CreateProduct },
+  functions: { Products, ProductById, CreateProduct, CatalogBatchProcess },
   package: { individually: true },
   custom: {
     reqValidatorName: 'RequestValidatorFull',

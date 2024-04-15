@@ -1,12 +1,13 @@
 import { S3Handler } from 'aws-lambda';
-import { S3 } from 'aws-sdk';
 import csv from 'csv-parser';
 import { once } from 'events';
+import * as AWS from 'aws-sdk';
+
+const sqs = new AWS.SQS();
 
 export const importFileParserHandler: S3Handler = async (event) => {
-    const s3 = new S3();
+    const s3 = new AWS.S3();
     for (const record of event?.Records) {
-        console.log('BKB', record);
         if (!record?.s3?.object?.key?.endsWith('.csv')) {
             console.log(`Skipping non-CSV file "${record.s3.object.key}"`);
             continue;
@@ -19,25 +20,26 @@ export const importFileParserHandler: S3Handler = async (event) => {
             })
             .createReadStream();
 
-        console.log('BKB', s3Object);
-
         s3Object
             .on('error', err => {
                 console.log('Error in S3 Stream:', err);
             })
             .pipe(csv())
-            .on('data', data => {
+            .on('data', async (data) => {
                 // handle data
                 console.log(data);
+
+                await sqs.sendMessage({
+                    QueueUrl: 'https://sqs.us-east-1.amazonaws.com/058264555641/catalogItemsQueue',
+                    MessageBody: JSON.stringify(data),
+                }).promise();
             })
             .on('error', err => {
                 console.log('Error in CSV Parser:', err);
             })
-            .on('end', () => {
-                console.log('Finished processing');
-            });
+            .on('end', () => { });
         try {
-            await once(s3Object, 'end');  // Corrected line
+            await once(s3Object, 'end');
         } catch (err) {
             console.error(`Failed to process "${record.s3.object.key}": ${err}`);
         }

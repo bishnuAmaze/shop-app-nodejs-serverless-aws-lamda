@@ -32,6 +32,13 @@ const serverlessConfiguration: AWS = {
         ],
         Resource: 'arn:aws:s3:::bkbuploadfiles/*',  // replace with your bucket ARN
       },
+      {
+        Effect: 'Allow',
+        Action: [
+          'sqs:SendMessage',
+        ],
+        Resource: 'arn:aws:sqs:us-east-1:058264555641:catalogItemsQueue'
+      },
     ],
   },
   functions: { ImportProductsFile, ImportFileParser },
