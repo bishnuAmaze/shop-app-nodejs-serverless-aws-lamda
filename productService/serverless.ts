@@ -151,6 +151,32 @@ const serverlessConfiguration: AWS = {
             Ref: 'CreateProductTopic'
           }
         }
+      },
+      HighPriceProductSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          TopicArn: {
+            Ref: 'CreateProductTopic',
+          },
+          Protocol: 'email',
+          Endpoint: 'bishnukumar_bhakat@epam.com', // Replace with your email
+          FilterPolicy: {
+            price: [{ 'numeric': ['>', 50] }], // Filtering by price
+          },
+        },
+      },
+      LowPriceProductSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          TopicArn: {
+            Ref: 'CreateProductTopic',
+          },
+          Protocol: 'email',
+          Endpoint: 'bishnukumarbhakat@gmail.com', // Replace with your email
+          FilterPolicy: {
+            price: [{ 'numeric': ['<=', 50] }], // Filtering by price
+          },
+        },
       }
     }
   },
