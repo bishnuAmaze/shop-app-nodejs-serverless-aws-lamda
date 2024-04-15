@@ -36,3 +36,26 @@ export const CreateProduct = {
     }
   ]
 };
+
+export const CatalogBatchProcess = {
+  handler: `${handlerPath(__dirname)}/handler.catalogBatchProcess`,
+  events: [
+    {
+      sqs: {
+        batchSize: 5,
+        arn: {
+          "Fn::GetAtt": [
+            "CatalogItemsQueue",
+            "Arn"
+          ]
+        }
+      },
+    }
+  ],
+  environment: {
+    SQS_URL: {
+      Ref: 'CatalogItemsQueue'
+    },
+    TOPIC_ARN: { Ref: 'CreateProductTopic' }
+  }
+}
