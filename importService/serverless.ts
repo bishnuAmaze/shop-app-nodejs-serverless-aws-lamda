@@ -10,7 +10,6 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs20.x',
     region: 'us-east-1',
-    stage: 'dev',
     httpApi: {
       cors: true
     },
@@ -38,6 +37,13 @@ const serverlessConfiguration: AWS = {
           'sqs:SendMessage',
         ],
         Resource: 'arn:aws:sqs:us-east-1:058264555641:catalogItemsQueue'
+      },
+      {
+        Effect: "Allow",
+        Action: ["lambda:InvokeFunction"],
+        Resource: [
+          "arn:aws:lambda:us-east-1:058264555641:function:authorization-service-dev-Authorizer",
+        ],
       },
     ],
   },

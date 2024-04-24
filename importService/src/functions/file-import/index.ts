@@ -4,9 +4,17 @@ export const ImportProductsFile = {
   handler: `${handlerPath(__dirname)}/handler.importProductsFile`,
   events: [
     {
-      httpApi: {
+      http: {
         method: 'GET',
-        path: '/${self:provider.stage}/import',
+        cors: true,
+        path: '/import',
+        authorizer: {
+          type: 'token',
+          name: 'authorization-service-dev-Authorizer',
+          arn: 'arn:aws:lambda:us-east-1:058264555641:function:authorization-service-dev-Authorizer',
+          resultTtlInSeconds: 0,
+          identitySource: 'method.request.header.Authorization',
+        },
       }
     }
   ],
